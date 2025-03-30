@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kartu Ucapan Idul Fitri 2025</title>
+    <style>
+        @keyframes glowing-border {
+            0% { border-color: #27ae60; box-shadow: 0 0 5px #27ae60; }
+            50% { border-color: #2ecc71; box-shadow: 0 0 15px #2ecc71; }
+            100% { border-color: #27ae60; box-shadow: 0 0 5px #27ae60; }
+        }
+        @keyframes lantern-float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #2c3e50, #34495e);
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            position: relative;
+        }
+        .card {
+            background: #fff;
+            width: 400px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            border-radius: 15px;
+            border: 3px solid #27ae60;
+            animation: glowing-border 2s infinite alternate;
+            position: relative;
+        }
+        .card img.profile {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+            border: 3px solid #27ae60;
+            box-shadow: 0 0 5px rgba(39, 174, 96, 0.5);
+        }
+        .card h1 {
+            font-size: 22px;
+            color: #27ae60;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .btn {
+            display: inline-block;
+            padding: 8px 18px;
+            background: #27ae60;
+            color: white;
+            text-decoration: none;
+            font-size: 14px;
+            border-radius: 20px;
+            transition: 0.3s;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            pointer-events: none;
+            opacity: 0.5;
+        }
+        .lantern {
+            position: absolute;
+            width: 50px;
+            animation: lantern-float 3s infinite ease-in-out;
+        }
+        .lantern1 {
+            top: 10px;
+            left: 20px;
+        }
+        .lantern2 {
+            top: 30px;
+            right: 20px;
+            animation-delay: 1s;
+        }
+    </style>
+</head>
+<body>
+    <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" alt="Lantern" class="lantern lantern1">
+    <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" alt="Lantern" class="lantern lantern2">
+    <div class="card">
+        <img src="https://files.fm/thumb_show.php?i=4tp7u9cjyk" alt="Foto Idul Fitri" class="profile">
+        <h1>Selamat Hari Raya Idul Fitri 1446 H</h1>
+        <p>Mohon maaf lahir dan batin. Semoga kita semua diberkahi dengan kebahagiaan dan kedamaian.</p>
+        <a href="#" class="btn">Khairul Ridho Basuki</a>
+    </div>
+</body>
+</html>
