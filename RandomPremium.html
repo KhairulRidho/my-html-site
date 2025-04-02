@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Galeri</title>
+  <link rel="stylesheet" href="stylePrem.css">
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <div class="logo">
+        <a href="#">Eri<span>davira</span>.</a>
+      </div>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+
+    <!-- Gallery Section -->
+    <section class="gallery">
+      <div class="gallery-container" id="gallery-container">
+        <!-- Images will be dynamically loaded here -->
+      </div>
+    </section>
+
+    <!-- Tombol Next dan Previous -->
+    <div class="navigation-buttons">
+      <a href="#" class="prev-btn" id="prev-btn">Previous</a>
+      <a href="#" class="next-btn" id="next-btn">Next</a>
+    </div>
+  </div>
+
+  <script>
+    // Array yang berisi URL gambar dalam format pendek
+    const allImages = [ 
+      "img6.jpg", "img7.jpg", "img8.jpg", "img9.jpg", "img10.jpg", "img11.jpg", "img12.jpg",
+      "img13.jpg", "img14.jpg", "img15.jpg", "img16.jpg", "img17.jpg", "img18.jpg", "img19.jpg", 
+      "img20.jpg", "img21.jpg", "img22.jpg", "img23.jpg", "img24.jpg", "img25.jpg", "img26.jpg",
+      "img27.jpg", "img28.jpg", "img29.jpg", "img30.jpg", "img31.jpg", "img32.jpg", "img33.jpg",
+      "img34.jpg", "img35.jpg", "img36.jpg", "img37.jpg", "img38.jpg", "img39.jpg", "img40.jpg",
+    ];
+
+    let currentPage = 0;
+    const imagesPerPage = 24;
+
+    function getModifiedLink(originalUrl) {
+      try {
+        const urlObj = new URL(originalUrl);
+        const pathParts = urlObj.pathname.split("/"); // Pisahkan URL berdasarkan "/"
+        const fileId = pathParts[pathParts.length - 1]; // Ambil ID dari bagian terakhir
+
+        // Jika formatnya "https://files.fm/f/{id}"
+        if (urlObj.hostname === "files.fm" && pathParts[1] === "f") {
+          return `https://files.fm/thumb_show.php?i=${fileId}`;
+        }
+        return originalUrl; // Jika bukan format yang dikenali, kembalikan original
+      } catch (error) {
+        console.error("Invalid URL:", originalUrl);
+        return originalUrl;
+      }
+    }
+
+    // Fungsi untuk memuat galeri
+    function loadGallery(page) {
+      const galleryContainer = document.getElementById("gallery-container");
+      galleryContainer.innerHTML = "";
+
+      const startIndex = page * imagesPerPage;
+      const endIndex = startIndex + imagesPerPage;
+      const imagesToDisplay = allImages.slice(startIndex, endIndex);
+
+      imagesToDisplay.forEach((imageSrc) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = getModifiedLink(imageSrc);
+        imgElement.alt = "Image";
+        imgElement.classList.add("gallery-image");
+        imgElement.loading = "lazy";
+        imgElement.addEventListener("click", () => {
+          window.open(getModifiedLink(imageSrc), "_blank");
+        });
+        galleryContainer.appendChild(imgElement);
+      });
+    }
+
+    // Tombol Next dan Previous
+    document.getElementById("next-btn").addEventListener("click", () => {
+      if ((currentPage + 1) * imagesPerPage < allImages.length) {
+        currentPage++;
+        loadGallery(currentPage);
+      }
+    });
+
+    document.getElementById("prev-btn").addEventListener("click", () => {
+      if (currentPage > 0) {
+        currentPage--;
+        loadGallery(currentPage);
+      }
+    });
+
+    // Memuat halaman pertama pada awalnya
+    loadGallery(currentPage);
+  </script>
+</body>
+</html>

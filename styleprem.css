@@ -1,0 +1,213 @@
+@import url('https://fonts.googleapis.com/css2?family=Karla:wght@300;400;500;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Karla', sans-serif;
+}
+
+body {
+  color: #fff;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh; /* Menggunakan min-height agar halaman tidak terpotong */
+  background-image: url(back.jpg);
+  background-position: center;
+  background-size: cover;
+  background-attachment: fixed; /* Menjaga background tetap di tempat saat scroll */
+  padding-top: 35px;
+  padding-left: 8%;
+  padding-right: 8%;
+  padding-bottom: 20px; /* Menambahkan padding bawah agar tidak ada spasi putih */
+  box-sizing: border-box; /* Pastikan padding tidak menambah tinggi */
+}
+
+
+nav {
+  padding: 10px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed; /* Fixes navigation bar at the top */
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Optional: adds transparency */
+  z-index: 100; /* Ensures navigation stays on top */
+}
+
+.logo a {
+  font-size: 40px;
+  text-decoration: none;
+}
+
+span {
+  color: #f9004d;
+}
+
+nav ul li {
+  display: inline-block;
+  list-style: none;
+  margin: 10px 15px;
+}
+
+nav ul li a {
+  text-decoration: none;
+  transition: 0.5s;
+}
+
+nav ul li a:hover {
+  color: #f9004d;
+}
+
+.login {
+  text-decoration: none;
+  margin-right: 15px;
+  font-size: 18px;
+}
+
+.btn {
+  background: #000;
+  border-radius: 6px;
+  padding: 9px 25px;
+  text-decoration: none;
+  transition: 0.5s;
+  font-size: 18px;
+}
+
+.content {
+  margin-top: 10%;
+  max-width: 600px;
+}
+
+.content h2 {
+  font-size: 60px;
+}
+
+.content p {
+  margin-top: 10px;
+  line-height: 25px;
+}
+
+a {
+  color: #fff;
+}
+
+.link {
+  margin-top: 30px;
+}
+
+.hire {
+  color: #000;
+  text-decoration: none;
+  background: #fff;
+  padding: 9px 25px;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.5s;
+}
+
+.link .hire:hover {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+/* Gallery Section */
+.gallery {
+  text-align: center;
+  margin-top: 70px; /* Adds space to prevent overlap with fixed nav */
+}
+
+.gallery-container {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr); /* 6 kolom */
+  gap: 10px;
+  padding: 20px;
+}
+
+.gallery-container img {
+  width: 100%;
+  aspect-ratio: 1 / 1; /* Semua gambar jadi kotak (1:1) */
+  object-fit: cover; /* Gambar akan crop otomatis biar nggak penyet */
+  border: 3px solid #fff; /* Border putih */
+  border-radius: 8px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.gallery-container img:hover {
+  transform: scale(1.05);
+  border-color: #f9004d; /* Border jadi merah pas di-hover */
+}
+
+
+/* Tombol Sci-Fi Berkelas */
+.navigation-buttons {
+  width: 100%;
+  display: flex;
+  justify-content: space-between; /* Tombol berada di kiri dan kanan */
+  padding: 20px 30px;
+  margin-top: 50px;
+  position: relative;
+}
+
+.navigation-buttons a {
+  text-decoration: none;
+  padding: 14px 30px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(45deg, #00bcd4, #8e2de2); /* Gradasi warna elegan */
+  border: 2px solid transparent; 
+  border-radius: 30px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 188, 212, 0.4); /* Efek cahaya halus */
+}
+
+/* Efek Hover pada Tombol */
+.navigation-buttons a:hover {
+  background: linear-gradient(45deg, #8e2de2, #00bcd4); /* Balikan warna saat hover */
+  border-color: #fff;
+  color: #fff;
+  transform: translateY(-5px); /* Efek tombol terangkat */
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.6), 0 6px 30px rgba(142, 45, 226, 0.6); /* Efek cahaya intens */
+}
+
+/* Menambahkan garis di bawah tombol saat hover */
+.navigation-buttons a:before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 2px;
+  background-color: #fff;
+  transition: width 0.3s ease;
+}
+
+.navigation-buttons a:hover:before {
+  width: 50%; /* Garis akan muncul saat hover */
+}
+
+/* Menempatkan tombol Previous di kiri */
+.prev-btn {
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 25px;
+  font-size: 16px;
+}
+
+/* Menempatkan tombol Next di kanan */
+.next-btn {
+  padding-left: 30px;
+  padding-right: 30px;
+  border-radius: 25px;
+  font-size: 16px;
+}
