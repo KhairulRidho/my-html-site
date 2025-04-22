@@ -1,100 +1,106 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Galeri Lazy Loading</title>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Lazy Loading Gallery</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Galeri Foto Lazy Loading</h1>
-  <input type="text" id="search" placeholder="Cari gambar dan tekan Enter...">
+  <h1>Lazy Loading Gallery</h1>
+
+  <input type="text" id="search" placeholder="Search..." />
+
+  <div id="loading">Loading...</div>
+
   <div class="gallery" id="gallery"></div>
-  <div id="loading">Memuat...</div>
 
   <script>
     let currentPage = 1;
-    const maxPages = 5;
+    const maxPages = 5; // Jumlah halaman maksimal
     const gallery = document.getElementById('gallery');
-    const loading = document.getElementById('loading');
     const searchInput = document.getElementById('search');
-    let isLoading = false;
 
+    // Fungsi untuk memuat data dari file JSON
     async function fetchJsonFile(page) {
-      try {
-        const response = await fetch(`images${page}.json`);
-        if (!response.ok) throw new Error('File tidak ditemukan');
-        return await response.json();
-      } catch (err) {
-        return [];
-      }
+      const response = await fetch(`images${page}.json`);
+      const data = await response.json();
+      return data;
     }
 
+    // Fungsi untuk merender gambar-gambar dari JSON
     function renderImages(images) {
       images.forEach(image => {
         const item = document.createElement('div');
-        item.classList.add('gallery-item');
-        item.innerHTML = `
-          <img src="${image.url}" alt="${image.title}">
-          <h3>${image.title}</h3>
-        `;
+        item.className = 'gallery-item';
+
+        const link = document.createElement('a');
+        link.href = image.url || image.img; // fallback ke image.img
+        link.target = '_blank'; // buka di tab baru
+
+        const img = document.createElement('img');
+        img.src = image.img;
+        img.alt = image.title;
+
+        const title = document.createElement('h3');
+        title.textContent = image.title;
+
+        link.appendChild(img);
+        item.appendChild(link);
+        item.appendChild(title);
         gallery.appendChild(item);
-        setTimeout(() => item.classList.add('loaded'), 100);
+
+        // Animasi gambar masuk
+        setTimeout(() => item.classList.add('loaded'), 10);
       });
     }
 
-    async function lazyLoadNextPage() {
-      if (isLoading) return;
-      isLoading = true;
-      loading.style.display = 'block';
+    // Fungsi untuk mencari gambar berdasarkan input
+    async function searchImages(query) {
+      gallery.innerHTML = '';
+      for (let i = maxPages; i >= 1; i--) {
+        const data = await fetchJsonFile(i);
+        const filteredData = data.filter(image => image.title.toLowerCase().includes(query.toLowerCase()));
+        if (filteredData.length > 0) {
+          renderImages(filteredData);
+        }
+      }
+      if (gallery.innerHTML === '') {
+        document.getElementById('loading').innerText = 'No results found.';
+      } else {
+        document.getElementById('loading').style.display = 'none';
+      }
+    }
 
+    // Fungsi untuk memuat gambar secara lazy load
+    async function loadImages() {
       const data = await fetchJsonFile(currentPage);
       renderImages(data);
       currentPage++;
-
-      isLoading = false;
-      loading.style.display = 'none';
+      if (currentPage > maxPages) {
+        window.removeEventListener('scroll', loadOnScroll);
+      }
     }
 
-    async function searchAcrossAllPages(query) {
-      gallery.innerHTML = '';
-      loading.style.display = 'block';
-      let allResults = [];
-
-      for (let i = 1; i <= maxPages; i++) {
-        const data = await fetchJsonFile(i);
-        const matches = data.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
-        allResults = allResults.concat(matches);
+    // Fungsi untuk menangani lazy load saat scroll
+    function loadOnScroll() {
+      if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+        loadImages();
       }
-
-      renderImages(allResults);
-      loading.style.display = 'none';
     }
 
-    window.addEventListener('scroll', () => {
-      const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
-      const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
-
-      if (isBottom && !searchInput.value.trim()) {
-        lazyLoadNextPage();
-      }
+    // Event listener untuk search
+    searchInput.addEventListener('input', (e) => {
+      document.getElementById('loading').style.display = 'block';
+      searchImages(e.target.value);
     });
 
-    searchInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        const query = event.target.value.trim();
-        currentPage = 1;
+    // Event listener untuk scroll
+    window.addEventListener('scroll', loadOnScroll);
 
-        if (query) {
-          searchAcrossAllPages(query);
-        } else {
-          gallery.innerHTML = '';
-          lazyLoadNextPage();
-        }
-      }
-    });
-
-    lazyLoadNextPage();
+    // Muat gambar pertama kali
+    loadImages();
   </script>
 </body>
 </html>

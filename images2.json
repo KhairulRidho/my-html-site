@@ -1,13 +1,43 @@
 [
-    { "title": "Gambar 11", "url": "https://via.placeholder.com/300x200?text=Gambar+11" },
-    { "title": "Gambar 12", "url": "https://via.placeholder.com/300x200?text=Gambar+12" },
-    { "title": "Gambar 13", "url": "https://via.placeholder.com/300x200?text=Gambar+13" },
-    { "title": "Gambar 14", "url": "https://via.placeholder.com/300x200?text=Gambar+14" },
-    { "title": "Gambar 15", "url": "https://via.placeholder.com/300x200?text=Gambar+15" },
-    { "title": "Gambar 16", "url": "https://via.placeholder.com/300x200?text=Gambar+16" },
-    { "title": "Gambar 17", "url": "https://via.placeholder.com/300x200?text=Gambar+17" },
-    { "title": "Gambar 18", "url": "https://via.placeholder.com/300x200?text=Gambar+18" },
-    { "title": "Gambar 19", "url": "https://via.placeholder.com/300x200?text=Gambar+19" },
-    { "title": "Gambar 20", "url": "https://via.placeholder.com/300x200?text=Gambar+20" }
+    {
+        "title": "Gambar Kucing Aesthetic",
+        "img": "https://example.com/images/cat.jpg",
+        "url": "https://example.com/detail-page/cat"
+      },
+      {
+        "title": "Pemandangan Senja",
+        "img": "https://example.com/images/sunset.jpg",
+        "url": "https://example.com/detail-page/sunset"
+      },
+      {
+          "title": "Gambar Kucing Aesthetic",
+          "img": "https://example.com/images/cat.jpg",
+          "url": "https://example.com/detail-page/cat"
+        },
+        {
+          "title": "Pemandangan Senja",
+          "img": "https://example.com/images/sunset.jpg",
+          "url": "https://example.com/detail-page/sunset"
+        },
+        {
+          "title": "Gambar Kucing Aesthetic",
+          "img": "https://example.com/images/cat.jpg",
+          "url": "https://example.com/detail-page/cat"
+        },
+        {
+          "title": "Pemandangan Senja",
+          "img": "https://example.com/images/sunset.jpg",
+          "url": "https://example.com/detail-page/sunset"
+        },
+        {
+          "title": "Gambar Kucing Aesthetic",
+          "img": "https://example.com/images/cat.jpg",
+          "url": "https://example.com/detail-page/cat"
+        },
+        {
+          "title": "Pemandangan Senja",
+          "img": "https://example.com/images/sunset.jpg",
+          "url": "https://example.com/detail-page/sunset"
+        }
   ]
   
