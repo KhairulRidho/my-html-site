@@ -4,82 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Galeri Lazy Loading</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-      margin: 0;
-      padding: 0;
-    }
-    .container {
-      width: 90%;
-      margin: 0 auto;
-      max-width: 1200px;
-    }
-    .search-container {
-      margin: 20px 0;
-      text-align: center;
-    }
-    input[type="text"] {
-      padding: 10px;
-      width: 50%;
-      font-size: 16px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 20px;
-    }
-    .gallery-item {
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.3s ease-out, transform 0.3s ease-out;
-    }
-    .gallery-item img {
-      width: 100%;
-      height: auto;
-    }
-    .gallery-item h3 {
-      padding: 10px;
-      text-align: center;
-      font-size: 16px;
-      background-color: #f8f8f8;
-      margin: 0;
-    }
-    .gallery-item.loaded {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-  <div class="container">
-    <div class="search-container">
-      <input type="text" id="search" placeholder="Cari gambar...">
-    </div>
-    
-    <div class="gallery" id="gallery"></div>
-
-    <div id="loading" style="text-align: center; padding: 20px;">
-      <p>Memuat...</p>
-    </div>
-  </div>
+  <h1>Galeri Foto Lazy Loading</h1>
+  <input type="text" id="search" placeholder="Cari gambar dan tekan Enter...">
+  <div class="gallery" id="gallery"></div>
+  <div id="loading">Memuat...</div>
 
   <script>
     let currentPage = 1;
-    const maxPages = 5; // jumlah total file imagesX.json yang tersedia
+    const maxPages = 5;
     const gallery = document.getElementById('gallery');
     const loading = document.getElementById('loading');
     const searchInput = document.getElementById('search');
     let isLoading = false;
-  
+
     async function fetchJsonFile(page) {
       try {
         const response = await fetch(`images${page}.json`);
@@ -89,7 +29,7 @@
         return [];
       }
     }
-  
+
     function renderImages(images) {
       images.forEach(image => {
         const item = document.createElement('div');
@@ -102,66 +42,59 @@
         setTimeout(() => item.classList.add('loaded'), 100);
       });
     }
-  
+
     async function lazyLoadNextPage() {
       if (isLoading) return;
       isLoading = true;
       loading.style.display = 'block';
-  
+
       const data = await fetchJsonFile(currentPage);
       renderImages(data);
       currentPage++;
-  
+
       isLoading = false;
       loading.style.display = 'none';
     }
-  
+
     async function searchAcrossAllPages(query) {
       gallery.innerHTML = '';
       loading.style.display = 'block';
       let allResults = [];
-  
+
       for (let i = 1; i <= maxPages; i++) {
         const data = await fetchJsonFile(i);
         const matches = data.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
         allResults = allResults.concat(matches);
       }
-  
+
       renderImages(allResults);
       loading.style.display = 'none';
     }
-  
-    // Event: scroll untuk lazy load
+
     window.addEventListener('scroll', () => {
       const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
       const isBottom = scrollTop + clientHeight >= scrollHeight - 10;
-  
+
       if (isBottom && !searchInput.value.trim()) {
         lazyLoadNextPage();
       }
     });
-  
-// Event: tekan tombol Enter di search
-searchInput.addEventListener('keydown', (event) => {
-  if (event.key === 'Enter') {
-    const query = event.target.value.trim();
-    currentPage = 1;
 
-    if (query) {
-      searchAcrossAllPages(query);
-    } else {
-      gallery.innerHTML = '';
-      lazyLoadNextPage();
-    }
-  }
-});
+    searchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        const query = event.target.value.trim();
+        currentPage = 1;
 
+        if (query) {
+          searchAcrossAllPages(query);
+        } else {
+          gallery.innerHTML = '';
+          lazyLoadNextPage();
+        }
+      }
+    });
 
-  
-    // Load pertama kali
     lazyLoadNextPage();
   </script>
-  
-
 </body>
 </html>
