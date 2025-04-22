@@ -1,43 +1,12 @@
 [
-    {
-      "title": "Gambar Kucing Aesthetic",
-      "img": "https://example.com/images/cat.jpg",
-      "url": "https://example.com/detail-page/cat"
-    },
-    {
-      "title": "Pemandangan Senja",
-      "img": "https://example.com/images/sunset.jpg",
-      "url": "https://example.com/detail-page/sunset"
-    },
-    {
-        "title": "Gambar Kucing Aesthetic",
-        "img": "https://example.com/images/cat.jpg",
-        "url": "https://example.com/detail-page/cat"
-      },
-      {
-        "title": "Pemandangan Senja",
-        "img": "https://example.com/images/sunset.jpg",
-        "url": "https://example.com/detail-page/sunset"
-      },
-      {
-        "title": "Gambar Kucing Aesthetic",
-        "img": "https://example.com/images/cat.jpg",
-        "url": "https://example.com/detail-page/cat"
-      },
-      {
-        "title": "Pemandangan Senja",
-        "img": "https://example.com/images/sunset.jpg",
-        "url": "https://example.com/detail-page/sunset"
-      },
-      {
-        "title": "Gambar Kucing Aesthetic",
-        "img": "https://example.com/images/cat.jpg",
-        "url": "https://example.com/detail-page/cat"
-      },
-      {
-        "title": "Pemandangan Senja",
-        "img": "https://example.com/images/sunset.jpg",
-        "url": "https://example.com/detail-page/sunset"
-      }
-  ]
-  
+  {
+    "title": "Gambar 1",
+    "url": "https://example.com/images/img1.jpg",
+    "link": "https://example.com/page1"
+  },
+  {
+    "title": "Gambar 2",
+    "url": "https://example.com/images/img2.jpg",
+    "link": "https://example.com/page2"
+  }
+]
