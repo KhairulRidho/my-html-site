@@ -1,98 +1,167 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kartu Ucapan Idul Fitri 2025</title>
-    <style>
-        @keyframes glowing-border {
-            0% { border-color: #27ae60; box-shadow: 0 0 5px #27ae60; }
-            50% { border-color: #2ecc71; box-shadow: 0 0 15px #2ecc71; }
-            100% { border-color: #27ae60; box-shadow: 0 0 5px #27ae60; }
-        }
-        @keyframes lantern-float {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-            100% { transform: translateY(0); }
-        }
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: linear-gradient(to right, #2c3e50, #34495e);
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            position: relative;
-        }
-        .card {
-            background: #fff;
-            width: 400px;
-            padding: 25px;
-            text-align: center;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            border: 3px solid #27ae60;
-            animation: glowing-border 2s infinite alternate;
-            position: relative;
-        }
-        .card img.profile {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 15px;
-            border: 3px solid #27ae60;
-            box-shadow: 0 0 5px rgba(39, 174, 96, 0.5);
-        }
-        .card h1 {
-            font-size: 22px;
-            color: #27ae60;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-        .card p {
-            font-size: 16px;
-            color: #555;
-            margin-bottom: 15px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 8px 18px;
-            background: #27ae60;
-            color: white;
-            text-decoration: none;
-            font-size: 14px;
-            border-radius: 20px;
-            transition: 0.3s;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
-            pointer-events: none;
-            opacity: 0.5;
-        }
-        .lantern {
-            position: absolute;
-            width: 50px;
-            animation: lantern-float 3s infinite ease-in-out;
-        }
-        .lantern1 {
-            top: 10px;
-            left: 20px;
-        }
-        .lantern2 {
-            top: 30px;
-            right: 20px;
-            animation-delay: 1s;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Galeri Menu Lazy Loading</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+
+    #search {
+      padding: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+    }
+
+    .item {
+      background-color: white;
+      border: 1px solid #ddd;
+      padding: 20px;
+      text-align: center;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      font-weight: bold;
+      transition: transform 0.2s ease;
+    }
+
+    .item:hover {
+      transform: scale(1.03);
+    }
+
+    .item a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .loading {
+      text-align: center;
+      margin: 30px 0;
+      color: #999;
+    }
+
+    @media (max-width: 768px) {
+      .gallery {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .gallery {
+        grid-template-columns: repeat(1, 1fr);
+      }
+    }
+  </style>
 </head>
 <body>
-    <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" alt="Lantern" class="lantern lantern1">
-    <img src="https://cdn-icons-png.flaticon.com/512/2917/2917995.png" alt="Lantern" class="lantern lantern2">
-    <div class="card">
-        <img src="https://files.fm/thumb_show.php?i=4tp7u9cjyk" alt="Foto Idul Fitri" class="profile">
-        <h1>Selamat Hari Raya Idul Fitri 1446 H</h1>
-        <p>Mohon maaf lahir dan batin. Semoga kita semua diberkahi dengan kebahagiaan dan kedamaian.</p>
-        <a href="#" class="btn">Khairul Ridho Basuki</a>
-    </div>
+
+  <input type="text" id="search" placeholder="Cari item..." />
+
+  <div class="gallery" id="gallery"></div>
+  <div class="loading" id="loading">Memuat item...</div>
+
+  <script>
+    const gallery = document.getElementById('gallery');
+    const loading = document.getElementById('loading');
+    const searchInput = document.getElementById('search');
+    let allItems = []; // Untuk menampung data items dari JSON
+    let filteredItems = [];
+    let currentIndex = 0;
+    const itemsPerLoad = 20; // 5 kolom x 4 baris
+    let isLoading = false;
+
+    // Ambil data items dari items.json
+    function fetchItems() {
+      fetch('/data/items.json') // Sesuaikan URL dengan tempat kamu simpan items.json
+        .then(response => response.json())
+        .then(data => {
+          allItems = data;
+          filteredItems = allItems; // Menyaring data berdasarkan pencarian nanti
+          loadItems();
+        })
+        .catch(() => {
+          alert('Data tidak dapat dimuat. Periksa koneksi Anda.');
+        });
+    }
+
+    function loadItems() {
+      if (isLoading) return;
+      isLoading = true;
+      loading.style.display = 'block';
+
+      setTimeout(() => {
+        const nextItems = filteredItems.slice(currentIndex, currentIndex + itemsPerLoad);
+        nextItems.forEach(itemData => {
+          const item = document.createElement('div');
+          item.className = 'item';
+
+          const link = document.createElement('a');
+          link.href = itemData.url;
+          link.textContent = itemData.label;
+          link.target = '_blank';
+          link.title = `Kunjungi ${itemData.label}`;
+
+          item.appendChild(link);
+          gallery.appendChild(item);
+        });
+
+        currentIndex += itemsPerLoad;
+        if (currentIndex >= filteredItems.length) {
+          loading.textContent = 'Semua item telah dimuat.';
+        } else {
+          loading.style.display = 'none';
+        }
+
+        isLoading = false;
+      }, 400); // Delay biar efek loading kerasa
+    }
+
+    function handleScroll() {
+      const nearBottom = window.innerHeight + window.scrollY >= document.body.offsetHeight - 100;
+      if (nearBottom && currentIndex < filteredItems.length) {
+        loadItems();
+      }
+    }
+
+    function resetAndLoadFilteredItems() {
+      const query = searchInput.value.toLowerCase();
+      filteredItems = allItems.filter(item => item.label.toLowerCase().includes(query));
+      currentIndex = 0;
+      gallery.innerHTML = '';
+      loading.textContent = 'Memuat item...';
+      loadItems();
+    }
+
+    searchInput.addEventListener('input', resetAndLoadFilteredItems);
+    window.addEventListener('scroll', handleScroll);
+
+    // Load data pertama kali
+    fetchItems();
+
+    // Jika service worker terdaftar, beri tahu user
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then((registration) => {
+          console.log('Service Worker terdaftar dengan sukses:', registration);
+        })
+        .catch((error) => {
+          console.log('Pendaftaran Service Worker gagal:', error);
+        });
+    }
+
+  </script>
+
 </body>
 </html>
