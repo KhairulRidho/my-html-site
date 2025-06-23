@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Flip ID Card with Three.js</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #2c3e50; /* Warna latar belakang gelap */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        canvas {
+            display: block;
+        }
+        #info {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 10px 20px;
+            border-radius: 8px;
+            color: white;
+            font-size: 1.1em;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+            z-index: 10;
+        }
+        #info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">
+        <p>Klik kartu untuk membaliknya!</p>
+        <p>Geser mouse untuk memutar kamera.</p>
+    </div>
+
+    <script type="module">
+        import * as THREE from 'https://unpkg.com/three@0.165.0/build/three.module.js';
+        import { OrbitControls } from 'https://unpkg.com/three@0.165.0/examples/jsm/controls/OrbitControls.js';
+
+        // --- Inisialisasi Scene, Camera, Renderer ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x2c3e50); // Sesuaikan latar belakang dengan CSS body
+
+        const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(0, 0, 4); // Posisi kamera agak mundur agar kartu terlihat
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // --- Kontrol Kamera ---
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.minDistance = 2;
+        controls.maxDistance = 6;
+        controls.enablePan = false; // Nonaktifkan panning agar kartu tetap di tengah
+
+        // --- Lampu ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.7); // Cahaya putih lembut
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        directionalLight.position.set(2, 3, 5).normalize();
+        scene.add(directionalLight);
+
+        // --- Membuat ID Card ---
+        // Ukuran standar kartu (misal: rasio 85.60 mm × 53.98 mm -> sekitar 1.586)
+        const cardWidth = 2.5;
+        const cardHeight = cardWidth / 1.586; // Menjaga rasio ID card
+        const cardDepth = 0.05; // Ketebalan kartu, sangat tipis
+
+        const cardGeometry = new THREE.BoxGeometry(cardWidth, cardHeight, cardDepth);
+
+        // Contoh Warna Material
+        const frontColor = 0x3498db; // Biru terang untuk depan
+        const backColor = 0xe74c3c; // Merah untuk belakang
+
+        // --- Membuat Material untuk Setiap Sisi ---
+        // Penting: BoxGeometry memiliki 6 sisi. Kita perlu material untuk sisi depan (index 4) dan belakang (index 5)
+        // Sisi-sisi BoxGeometry:
+        // 0: +X (kanan)
+        // 1: -X (kiri)
+        // 2: +Y (atas)
+        // 3: -Y (bawah)
+        // 4: +Z (depan)
+        // 5: -Z (belakang)
+
+        const materials = [
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Sisi kanan (akan disembunyikan/tipis)
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Sisi kiri
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Sisi atas
+            new THREE.MeshStandardMaterial({ color: 0xcccccc }), // Sisi bawah
+            new THREE.MeshStandardMaterial({ color: frontColor }), // Sisi depan (index 4)
+            new THREE.MeshStandardMaterial({ color: backColor })   // Sisi belakang (index 5)
+        ];
+
+        const idCard = new THREE.Mesh(cardGeometry, materials);
+        scene.add(idCard);
+
+        // --- Logika Rotasi Kartu ---
+        let isFlipped = false; // Status kartu: apakah sudah terbalik atau belum
+        const rotationSpeed = Math.PI / 15; // Kecepatan putaran (radian per frame)
+        let targetRotationY = 0; // Target rotasi Y
+
+        // Interaksi klik mouse untuk membalik kartu
+        renderer.domElement.addEventListener('click', () => {
+            isFlipped = !isFlipped; // Balik status
+            targetRotationY = isFlipped ? Math.PI : 0; // 180 derajat (PI radian) atau 0
+        });
+
+        // --- Loop Animasi ---
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Perbarui rotasi kartu secara bertahap menuju target
+            idCard.rotation.y += (targetRotationY - idCard.rotation.y) * 0.1; // Rotasi halus
+
+            controls.update(); // Perbarui kontrol kamera
+            renderer.render(scene, camera); // Render scene
+        }
+        animate();
+
+        // --- Responsivitas Jendela Browser ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        // --- Opsional: Menambahkan Konten Teks ke Kartu (lebih kompleks) ---
+        // Untuk menambahkan teks atau gambar spesifik ke kartu, Anda perlu:
+        // 1. Menggunakan Canvas (HTML5) untuk menggambar teks/gambar.
+        // 2. Mengubah Canvas tersebut menjadi Texture Three.js.
+        // 3. Menerapkan Texture ke material sisi depan/belakang kartu.
+
+        // Contoh dasar bagaimana membuat tekstur dari canvas
+        function createCardTexture(text, bgColor, textColor, isBack = false) {
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = 512; // Ukuran tekstur (harus pangkat 2)
+            canvas.height = 512 / (cardWidth / cardHeight); // Menjaga rasio kartu
+
+            // Latar belakang kartu
+            context.fillStyle = bgColor;
+            context.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Teks
+            context.fillStyle = textColor;
+            context.font = 'Bold 48px Arial';
+            context.textAlign = 'center';
+            context.textBaseline = 'middle';
+            
+            // Tambahkan tulisan "DEPAN" atau "BELAKANG"
+            if (isBack) {
+                context.fillText('ID CARD', canvas.width / 2, canvas.height * 0.4);
+                context.font = 'Normal 36px Arial';
+                context.fillText('BELAKANG', canvas.width / 2, canvas.height * 0.6);
+            } else {
+                context.fillText('ID CARD', canvas.width / 2, canvas.height * 0.4);
+                context.font = 'Normal 36px Arial';
+                context.fillText('DEPAN', canvas.width / 2, canvas.height * 0.6);
+            }
+
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true; // Penting agar tekstur diperbarui
+            return texture;
+        }
+
+        // Buat tekstur untuk depan dan belakang
+        const frontTexture = createCardTexture('ID CARD', frontColor, '#FFFFFF', false);
+        const backTexture = createCardTexture('ID CARD', backColor, '#FFFFFF', true);
+
+        // Ganti material sisi depan dan belakang dengan tekstur
+        idCard.material[4] = new THREE.MeshStandardMaterial({ map: frontTexture });
+        idCard.material[5] = new THREE.MeshStandardMaterial({ map: backTexture });
+        idCard.material.needsUpdate = true; // Pastikan material diperbarui
+    </script>
+</body>
+</html>
