@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dual Shoot Arena - Multiplayer Online</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+    <h1 id="gameTitle">DUAL SHOOT ARENA</h1>
+
+    <div class="element" id="top">Mencari Lawan...</div>
+    
+    <div class="game-container">
+        
+        <div class="element hidden-default" id="left">
+            <h3>P1 (Panah)</h3>
+            <img src="https://raw.githubusercontent.com/hantucinta/mentahan-project-game/refs/heads/main/Proyek%20Baru%202%20%5B8CA31B7%5D.png" alt="Left Character">
+            <div class="hp-bar-container">
+                <div class="hp-bar" id="leftHPBar"></div>
+            </div>
+            <div class="hp-text" id="leftHPText">100</div>
+        </div>
+        
+        <div class="element hidden-default" id="right">
+            <h3>P2 (WASD)</h3>
+            <img src="https://raw.githubusercontent.com/hantucinta/mentahan-project-game/refs/heads/main/Proyek%20Baru%202%20%5B90FA073%5D.png" alt="Right Character">
+            <div class="hp-bar-container">
+                <div class="hp-bar" id="rightHPBar"></div>
+            </div>
+            <div class="hp-text" id="rightHPText">100</div>
+        </div>
+        
+    </div>
+
+    <div class="controls">
+        <button id="shootLeft">Tembak Lawan</button> 
+        <button id="shootRight">Tembak Lawan</button>
+    </div>
+
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
